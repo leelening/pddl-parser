@@ -2,6 +2,12 @@
 # Four spaces as indentation [no tabs]
 
 from PDDL import PDDL_Parser
+import pickle
+
+
+def convert(list):
+    return tuple(tuple(i) for i in list)
+
 
 class Planner:
 
@@ -28,23 +34,18 @@ class Planner:
                 ground_actions.append(act)
         # Search
         visited = [state]
-        fringe = [state, None]
-        while fringe:
-            state = fringe.pop(0)
-            plan = fringe.pop(0)
+        transitions = dict()
+        while visited:
+            state = visited.pop(0)
+            transitions[convert(state)] = dict()
             for act in ground_actions:
                 if self.applicable(state, act.positive_preconditions, act.negative_preconditions):
                     new_state = self.apply(state, act.add_effects, act.del_effects)
                     if new_state not in visited:
                         if self.applicable(new_state, goal_pos, goal_not):
-                            full_plan = [act]
-                            while plan:
-                                act, plan = plan
-                                full_plan.insert(0, act)
-                            return full_plan
+                            return transitions
                         visited.append(new_state)
-                        fringe.append(new_state)
-                        fringe.append((act, plan))
+                        transitions[convert(state)][act.name] = new_state
         return None
 
     #-----------------------------------------------
@@ -71,7 +72,7 @@ class Planner:
                 new_state.append(i)
         for i in positive:
             if i not in new_state:
-              new_state.append(i)
+                new_state.append(i)
         return new_state
 
 # ==========================================
@@ -82,12 +83,21 @@ if __name__ == '__main__':
     start_time = time.time()
     domain = sys.argv[1]
     problem = sys.argv[2]
+    # domain = 'examples/attackgraph/domain.pddl'
+    # problem = 'examples/attackgraph/problem.pddl'
     planner = Planner()
-    plan = planner.solve(domain, problem)
-    print('Time: ' + str(time.time() - start_time) + 's')
-    if plan:
-        print('plan:')
-        for act in plan:
-            print(act)
-    else:
-        print('No plan was found')
+    transitions = planner.solve(domain, problem)
+    print('\nThe total number of states: ', '\t\t', len(transitions.keys()))
+    print('\nTime: ','\t\t', str(time.time() - start_time) + 's')
+
+    # count the transitions
+    edge_count = 0
+    for s in transitions:
+        for a in transitions[s]:
+            n_s = transitions[s][a]
+            edge_count+=1
+    print('\nThe total number of transitions: ', '\t\t', edge_count)
+
+
+    with open('transitions.pickle', 'wb') as handle:
+        pickle.dump(transitions, handle, protocol=pickle.HIGHEST_PROTOCOL)
