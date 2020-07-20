@@ -35,19 +35,19 @@ class Constructor:
                 ground_actions.append(act)
         # Search
         visited = [state]
+        need_visit = [state]
         transitions = dict()
-        while visited:
-            state = visited.pop(0)
+        while need_visit:
+            state = need_visit.pop(0)
             transitions[convert(state)] = dict()
             for act in ground_actions:
                 if self.applicable(state, act.positive_preconditions, act.negative_preconditions):
                     new_state = self.apply(state, act.add_effects, act.del_effects)
                     if new_state not in visited:
-                        if self.applicable(new_state, goal_pos, goal_not):
-                            return [transitions,initial_state]
                         visited.append(new_state)
+                        need_visit.append(new_state)
                         transitions[convert(state)][act.name] = convert(new_state)
-        return None
+        return [transitions, initial_state]
 
     #-----------------------------------------------
     # Applicable
@@ -73,7 +73,7 @@ class Constructor:
                 new_state.append(i)
         for i in positive:
             if i not in new_state:
-                new_state.append(i)
+              new_state.append(i)
         return new_state
 
 # ==========================================
@@ -82,14 +82,14 @@ class Constructor:
 if __name__ == '__main__':
     import sys, time
     start_time = time.time()
-    domain = sys.argv[1]
-    problem = sys.argv[2]
-    # domain = '../graphs/0/domain.pddl'
-    # problem = '../graphs/0/problem.pddl'
+    # domain = sys.argv[1]
+    # problem = sys.argv[2]
+    domain = '../graphs/0/domain.pddl'
+    problem = '../graphs/0/problem.pddl'
     constructor = Constructor()
     [transitions, initial_state] = constructor.construct(domain, problem)
     print('\nThe total number of states: ', '\t\t', len(transitions.keys()))
-    print('\nTime: ','\t\t', str(time.time() - start_time) + 's')
+    print('\nTime: ', '\t\t', str(time.time() - start_time) + 's')
 
     # count the transitions
     edge_count = 0
