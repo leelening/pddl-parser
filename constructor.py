@@ -9,13 +9,13 @@ def convert(list):
     return tuple(tuple(i) for i in list)
 
 
-class Planner:
+class Constructor:
 
     #-----------------------------------------------
-    # Solve
+    # Construct
     #-----------------------------------------------
 
-    def solve(self, domain, problem):
+    def construct(self, domain, problem):
         # Parser
         parser = PDDL_Parser()
         parser.parse_domain(domain)
@@ -86,8 +86,8 @@ if __name__ == '__main__':
     problem = sys.argv[2]
     # domain = 'examples/attackgraph/domain.pddl'
     # problem = 'examples/attackgraph/problem.pddl'
-    planner = Planner()
-    [transitions, initial_state] = planner.solve(domain, problem)
+    constructor = Constructor()
+    [transitions, initial_state] = constructor.construct(domain, problem)
     print('\nThe total number of states: ', '\t\t', len(transitions.keys()))
     print('\nTime: ','\t\t', str(time.time() - start_time) + 's')
 
