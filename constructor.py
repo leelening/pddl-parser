@@ -6,7 +6,7 @@ import pickle
 
 
 def convert(list):
-    return tuple(tuple(i) for i in list)
+    return tuple(i[0] for i in list)
 
 
 class Constructor:
@@ -82,10 +82,10 @@ class Constructor:
 if __name__ == '__main__':
     import sys, time
     start_time = time.time()
-    domain = sys.argv[1]
-    problem = sys.argv[2]
-    # domain = 'examples/attackgraph/domain.pddl'
-    # problem = 'examples/attackgraph/problem.pddl'
+    # domain = sys.argv[1]
+    # problem = sys.argv[2]
+    domain = '../graphs/0/domain.pddl'
+    problem = '../graphs/0/problem.pddl'
     constructor = Constructor()
     [transitions, initial_state] = constructor.construct(domain, problem)
     print('\nThe total number of states: ', '\t\t', len(transitions.keys()))
