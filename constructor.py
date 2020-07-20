@@ -22,6 +22,7 @@ class Planner:
         parser.parse_problem(problem)
         # Parsed data
         state = parser.state
+        initial_state = convert(state)
         goal_pos = parser.positive_goals
         goal_not = parser.negative_goals
         # Do nothing
@@ -43,9 +44,9 @@ class Planner:
                     new_state = self.apply(state, act.add_effects, act.del_effects)
                     if new_state not in visited:
                         if self.applicable(new_state, goal_pos, goal_not):
-                            return transitions
+                            return [transitions,initial_state]
                         visited.append(new_state)
-                        transitions[convert(state)][act.name] = new_state
+                        transitions[convert(state)][act.name] = convert(new_state)
         return None
 
     #-----------------------------------------------
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     # domain = 'examples/attackgraph/domain.pddl'
     # problem = 'examples/attackgraph/problem.pddl'
     planner = Planner()
-    transitions = planner.solve(domain, problem)
+    [transitions, initial_state] = planner.solve(domain, problem)
     print('\nThe total number of states: ', '\t\t', len(transitions.keys()))
     print('\nTime: ','\t\t', str(time.time() - start_time) + 's')
 
@@ -100,4 +101,4 @@ if __name__ == '__main__':
 
 
     with open('transitions.pickle', 'wb') as handle:
-        pickle.dump(transitions, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        pickle.dump([transitions, initial_state], handle, protocol=pickle.HIGHEST_PROTOCOL)
