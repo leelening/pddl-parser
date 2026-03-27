@@ -149,11 +149,4 @@ MIT License - see [LICENSE.md](LICENSE.md) for details
 ## Author
 
 **Lening Li**
-- Robotic Lab Advisor at Harvard University
-- Senior Software Engineer at Symbotic
-- Ph.D. in Robotics Engineering (WPI)
-
-## Related Projects
-
-- [MulVAL-to-PDDL](https://github.com/leelening/MulVAL-to-pddl) - Convert MulVAL attack graphs to PDDL
-- [PDDL Editor](http://editor.planning.domains/) - Online PDDL editor and solver
+- GitHub: [@leelening](https://github.com/leelening)
